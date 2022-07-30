@@ -19,7 +19,6 @@ const validateUserInput = [
 ];
 
 let routes = (app) => {
-  router.get("/", auth_controller.test);
   //auth
   router.post(
     "/register-user",
@@ -29,9 +28,8 @@ let routes = (app) => {
 
   router.post("/signin", auth_controller.signIn);
   router.get("/getusers", auth_controller.getUsers);
-  router.get("user-profile/:id", authorize, auth_controller.getUser);
-  router.put("update-user/:id", authorize, auth_controller.updateUser);
-  router.delete("delete-user/:id", authorize, auth_controller.deleteUser);
+  router.get("/user/:id",authorize,  auth_controller.getUser);
+  router.delete("/delete-user/:id", authorize, auth_controller.deleteUser);
 
   //wallets
   router.post("/wallet", authorize, wallet_controller.defi_dapp);

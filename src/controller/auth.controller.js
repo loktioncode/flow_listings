@@ -5,8 +5,19 @@ const { validationResult } = require("express-validator");
 
 const salt = 10;
 
-const test = (req, res) => {
-  res.status(200).send({ message: "dapp up and running" });
+const getUser = (req, res) => {
+  userSchema.findById(req.params.id, (error, data) => {
+    if (error) {
+      res.status(401).json({
+        msg: error,
+      });
+    } else {
+
+      res.status(200).json({
+        msg: data,
+      });
+    }
+  });
 };
 
 // Sign-up
@@ -40,7 +51,7 @@ const registerUser = (req, res, next) => {
   }
 };
 
-const signIn = (req, res, next) => {
+const signIn = (req, res) => {
   let getUser;
   userSchema
     .findOne({
@@ -83,7 +94,7 @@ const signIn = (req, res, next) => {
       });
     });
 };
-const getUsers = (req, res, next) => {
+const getUsers = (req, res) => {
   userSchema.find((error, response) => {
     if (error) {
       return next(error);
@@ -92,18 +103,9 @@ const getUsers = (req, res, next) => {
     }
   });
 };
-const getUser = (req, res, next) => {
-  userSchema.findById(req.params.id, (error, data) => {
-    if (error) {
-      return next(error);
-    } else {
-      res.status(200).json({
-        msg: data,
-      });
-    }
-  });
-};
-const updateUser = (req, res, next) => {
+
+
+const updateUser = (req, res) => {
   userSchema.findByIdAndUpdate(
     req.params.id,
     {
@@ -134,11 +136,10 @@ const deleteUser = (req, res) => {
 };
 
 module.exports = {
-  test,
+  getUser,
   registerUser,
   signIn,
   getUsers,
-  getUser,
   updateUser,
   deleteUser,
 };
