@@ -1,48 +1,144 @@
-const sdk = require("api")("@circle-api/v1#6zzs581kl64dbwsy");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const userSchema = require("../models/User");
+const { validationResult } = require("express-validator");
 
-// const baseUrl = "http://localhost:8080/files/";
-const circle_api = process.env.CIRCLE_API;
+const salt = 10;
 
-const defi_dapp = (req, res) => {
-  sdk
-    .rootPing()
-    .then((res) => res.status(200).send({ message: res.message }))
-    .catch((err) => console.error(err));
+const test = (req, res) => {
+  res.status(200).send({ message: "dapp up and running" });
 };
 
-const createWallet = (req, res) => {
-  res.status(200).send({ message: "create wallet" });
+// Sign-up
+const registerUser = (req, res, next) => {
+  const errors = validationResult(req);
+  console.log(req.body);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).jsonp(errors.array());
+  } else {
+    bcrypt.hash(req.body.password, 10).then((hash) => {
+      const user = new userSchema({
+        name: req.body.name,
+        email: req.body.email,
+        password: hash,
+      });
+      user
+        .save()
+        .then((response) => {
+          res.status(201).json({
+            message: "User successfully created!",
+            result: response,
+          });
+        })
+        .catch((error) => {
+          res.status(500).json({
+            error: error,
+          });
+        });
+    });
+  }
 };
 
-// const exchange = async (req, res) => {
-//   var mint = req.body.nft.mint;
-//   var name = req.body.nft.name;
-//   const master = __basedir + "/public/admin.json";
+const signIn = (req, res, next) => {
+  let getUser;
+  userSchema
+    .findOne({
+      email: req.body.email,
+    })
+    .then((user) => {
+      if (!user) {
+        return res.status(401).json({
+          message: "Authentication failed",
+        });
+      }
+      getUser = user;
+      return bcrypt.compare(req.body.password, user.password);
+    })
+    .then((response) => {
+      if (!response) {
+        return res.status(401).json({
+          message: "Authentication failed",
+        });
+      }
+      let jwtToken = jwt.sign(
+        {
+          email: getUser.email,
+          userId: getUser._id,
+        },
+        "longer-secret-is-better",
+        {
+          expiresIn: "1h",
+        }
+      );
+      res.status(200).json({
+        token: jwtToken,
+        expiresIn: 3600,
+        msg: getUser,
+      });
+    })
+    .catch((err) => {
+      return res.status(401).json({
+        message: "Authentication failed",
+      });
+    });
+};
+const getUsers = (req, res, next) => {
+  userSchema.find((error, response) => {
+    if (error) {
+      return next(error);
+    } else {
+      res.status(200).json(response);
+    }
+  });
+};
+const getUser = (req, res, next) => {
+  userSchema.findById(req.params.id, (error, data) => {
+    if (error) {
+      return next(error);
+    } else {
+      res.status(200).json({
+        msg: data,
+      });
+    }
+  });
+};
+const updateUser = (req, res, next) => {
+  userSchema.findByIdAndUpdate(
+    req.params.id,
+    {
+      $set: req.body,
+    },
+    (error, data) => {
+      if (error) {
+        return next(error);
+        console.log(error);
+      } else {
+        res.json(data);
+        console.log("User successfully updated!");
+      }
+    }
+  );
+};
 
-//   if (mint === undefined || name === undefined) {
-//     return res.status(400).send({ message: "Please add mint/name address " });
-//   }
-
-//   for (var key in new_Urls) {
-//     if (new_Urls.hasOwnProperty(key)) {
-//       if (new_Urls[key].name === name) {
-//         var cmd = `metaboss update uri --keypair ${master} --account ${mint} --new-uri ${new_Urls[key].uri}`;
-//         exec(cmd, function (error, stdout, stderr) {
-//           console.log(stdout);
-//           console.log(stderr);
-//           res.status(200).send({ message: `upgrade done!!` });
-//         });
-//       }
-//     }
-//   }
-// };
+const deleteUser = (req, res) => {
+  userSchema.findByIdAndRemove(req.params.id, (error, data) => {
+    if (error) {
+      return next(error);
+    } else {
+      res.status(200).json({
+        msg: data,
+      });
+    }
+  });
+};
 
 module.exports = {
-  defi_dapp,
-  // upload,
-  // uploadCSV,
-  // getListFiles,
-  // download,
-  // runScript,
-  // exchange,
+  test,
+  registerUser,
+  signIn,
+  getUsers,
+  getUser,
+  updateUser,
+  deleteUser,
 };

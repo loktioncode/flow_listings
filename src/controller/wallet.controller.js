@@ -1,17 +1,15 @@
 const sdk = require("api")("@circle-api/v1#6zzs581kl64dbwsy");
 
+
 // const baseUrl = "http://localhost:8080/files/";
 const circle_api = process.env.CIRCLE_API;
 
 const defi_dapp = (req, res) => {
-  sdk
-    .rootPing()
-    .then((res) => res.status(200).send({ message: res.message }))
-    .catch((err) => console.error(err));
-};
-
-const createWallet = (req, res) => {
   res.status(200).send({ message: "create wallet" });
+}
+
+const getWallet = (req, res) => {
+  res.status(200).send({ message: "get wallet" });
 };
 
 // const exchange = async (req, res) => {

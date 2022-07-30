@@ -1,26 +1,36 @@
-const cors = require("cors");
-const express = require("express");
-const app = express();
-const bodyParser = require('body-parser');
-require('dotenv').config()
+const express = require('express');
+const bodyParser = require("body-parser");
+const mongoose= require('mongoose');
+const cors = require('cors');
 
-global.__basedir = __dirname;
+var cookieParser = require('cookie-parser');
+
+require('dotenv').config();
+const initRoutes = require("./src/routes/");
+
+
+let port = process.env.PORT || 8090;
+const app = express();
 
 var corsOptions = {
   origin: '*'
 };
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// get our urls and secrets
+const JWT_SECRET=process.env.SECRET || "secret dapp secret 101";
+const MONGODB_URL=process.env.MONGO_DB;
 
-app.use(cors(corsOptions));
+// making connnection with our database
+mongoose.connect(MONGODB_URL, {useFindAndModify: false,useNewUrlParser: true, useUnifiedTopology: true,useCreateIndex: true});
 
-const initRoutes = require("./src/routes");
-
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cookieParser());
+// app.use(cors(corsOptions));
+
 initRoutes(app);
 
-let port = 8090;
 app.listen(port, () => {
   console.log(`Running at localhost:${port}`);
 });
