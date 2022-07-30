@@ -28,7 +28,7 @@ let routes = (app) => {
   );
 
   router.post("/signin", auth_controller.signIn);
-  router.get("/getusers", authorize, auth_controller.getUsers);
+  router.get("/getusers", auth_controller.getUsers);
   router.get("user-profile/:id", authorize, auth_controller.getUser);
   router.put("update-user/:id", authorize, auth_controller.updateUser);
   router.delete("delete-user/:id", authorize, auth_controller.deleteUser);
