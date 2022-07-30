@@ -31,7 +31,7 @@ let routes = (app) => {
   router.get("/getusers", authorize, auth_controller.getUsers);
   router.get("user-profile/:id", authorize, auth_controller.getUser);
   router.put("update-user/:id", authorize, auth_controller.updateUser);
-  router.delete("delete-user/:id", authorize, auh_controller.deleteUser);
+  router.delete("delete-user/:id", authorize, auth_controller.deleteUser);
 
   //wallets
   router.post("/wallet", authorize, wallet_controller.defi_dapp);

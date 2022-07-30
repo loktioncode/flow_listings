@@ -1,4 +1,4 @@
-const sdk = require("api")("@circle-api/v1#6zzs581kl64dbwsy");
+// const sdk = require("api")("@circle-api/v1#6zzs581kl64dbwsy");
 
 
 // const baseUrl = "http://localhost:8080/files/";

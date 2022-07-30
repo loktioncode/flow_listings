@@ -17,7 +17,7 @@ const registerUser = (req, res, next) => {
   if (!errors.isEmpty()) {
     return res.status(422).jsonp(errors.array());
   } else {
-    bcrypt.hash(req.body.password, 10).then((hash) => {
+    bcrypt.hash(req.body.password, salt).then((hash) => {
       const user = new userSchema({
         name: req.body.name,
         email: req.body.email,
