@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const wallet_controller = require("../controller/wallet.controller");
 const auth_controller = require("../controller/auth.controller");
 const otp_controller = require("../controller/otp.controller");
 const authorize = require("../middleware/auth");
@@ -38,9 +37,6 @@ let routes = (app) => {
   router.get("/getusers", auth_controller.getUsers);
   router.get("/user/:id",authorize,  auth_controller.getUser);
   router.delete("/delete-user/:id", authorize, auth_controller.deleteUser);
-  //wallets
-  router.post("/wallet", authorize, wallet_controller.defi_dapp);
-  router.get("/get-pubkey", authorize, wallet_controller.getPublicKey);
   
   app.use(router);
 };

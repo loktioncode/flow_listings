@@ -5,7 +5,9 @@ const cors = require('cors');
 var cookieParser = require('cookie-parser');
 
 require('dotenv').config();
-const initRoutes = require("./src/routes/");
+const initAuthRoutes = require("./src/routes/auth");
+const walletRoutes = require("./src/routes/wallet");
+
 
 
 let port = process.env.PORT || 8090;
@@ -40,7 +42,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors(corsOptions));
-initRoutes(app);
+
+//api routes
+initAuthRoutes(app);
+walletRoutes(app);
+
 
 app.listen(port, () => {
   console.log(`Running at localhost:${port}`);
