@@ -12,9 +12,11 @@ let port = process.env.PORT || 8090;
 const app = express();
 
 var corsOptions = {
-  origin: '*'
+  origin: "*",
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  exposedHeaders: ['x-auth-token']
 };
-app.use(cors(corsOptions));
 
 
 // MongoDB conection
@@ -37,8 +39,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-// app.use(cors(corsOptions));
-
+app.use(cors(corsOptions));
 initRoutes(app);
 
 app.listen(port, () => {

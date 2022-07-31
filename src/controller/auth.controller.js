@@ -5,16 +5,20 @@ const { validationResult } = require("express-validator");
 
 const salt = 10;
 
+const ping = (req, res) => {
+  res.set("Content-Type", "text/html");
+  res.status(200).send(Buffer.from("<p>P2P api running ...!</p>"));
+};
+
 const getUser = (req, res) => {
   userSchema.findById(req.params.id, (error, data) => {
     if (error) {
       res.status(401).json({
-        msg: error,
+        message: "User not found!",
       });
     } else {
-
       res.status(200).json({
-        msg: data,
+        message: data,
       });
     }
   });
@@ -77,7 +81,7 @@ const signIn = (req, res) => {
           email: getUser.email,
           userId: getUser._id,
         },
-        "longer-secret-is-better",
+        process.env.JWT_SECRET,
         {
           expiresIn: "1h",
         }
@@ -85,7 +89,7 @@ const signIn = (req, res) => {
       res.status(200).json({
         token: jwtToken,
         expiresIn: 3600,
-        msg: getUser,
+        message: getUser,
       });
     })
     .catch((err) => {
@@ -97,13 +101,14 @@ const signIn = (req, res) => {
 const getUsers = (req, res) => {
   userSchema.find((error, response) => {
     if (error) {
-      return next(error);
+      res.status(401).json({
+        message: "User not Found",
+      });
     } else {
       res.status(200).json(response);
     }
   });
 };
-
 
 const updateUser = (req, res) => {
   userSchema.findByIdAndUpdate(
@@ -113,8 +118,9 @@ const updateUser = (req, res) => {
     },
     (error, data) => {
       if (error) {
-        return next(error);
-        console.log(error);
+        res.status(401).json({
+          message: "User update failed!",
+        });
       } else {
         res.json(data);
         console.log("User successfully updated!");
@@ -126,16 +132,19 @@ const updateUser = (req, res) => {
 const deleteUser = (req, res) => {
   userSchema.findByIdAndRemove(req.params.id, (error, data) => {
     if (error) {
-      return next(error);
+      res.status(401).json({
+        message: "User deletion failed!",
+      });
     } else {
       res.status(200).json({
-        msg: data,
+        message: data,
       });
     }
   });
 };
 
 module.exports = {
+  ping,
   getUser,
   registerUser,
   signIn,

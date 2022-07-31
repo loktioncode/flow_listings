@@ -1,15 +1,36 @@
-// const sdk = require("api")("@circle-api/v1#6zzs581kl64dbwsy");
+const axios = require("axios").default;
+const myCache = require("./cache");
 
+const options = {
+  method: "GET",
+  url: "https://api-sandbox.circle.com/v1/encryption/public",
+  headers: {
+    Accept: "application/json",
+    Authorization: `Bearer ${process.env.CIRCLE_API_KEY}`,
+  },
+};
 
-// const baseUrl = "http://localhost:8080/files/";
-const circle_api = process.env.CIRCLE_API;
+const getPublicKey = (req, res) => {
+  //store for 24hrs on FE
+  axios
+    .request(options)
+    .then(function (response) {
+      myCache.set("pubKey", response.data);
+      res.status(200).json({
+        message: response.data,
+      });
+    })
+    .catch(function (error) {
+      res.status(401).json({
+        message: "Failed to get publick Key",
+      });
+    });
+  // let c = myCache.get("pubKey");
+  // console.log("get cached pubkey", c);
+};
 
 const defi_dapp = (req, res) => {
   res.status(200).send({ message: "create wallet" });
-}
-
-const getWallet = (req, res) => {
-  res.status(200).send({ message: "get wallet" });
 };
 
 // const exchange = async (req, res) => {
@@ -37,6 +58,7 @@ const getWallet = (req, res) => {
 
 module.exports = {
   defi_dapp,
+  getPublicKey,
   // upload,
   // uploadCSV,
   // getListFiles,
