@@ -56,6 +56,8 @@ const registerUser = (req, res, next) => {
 };
 
 const signIn = (req, res) => {
+  console.log("get OTP>>")
+
   let getUser;
   userSchema
     .findOne({
@@ -83,12 +85,12 @@ const signIn = (req, res) => {
         },
         process.env.JWT_SECRET,
         {
-          expiresIn: "1h",
+          expiresIn: "2h",
         }
       );
       res.status(200).json({
         token: jwtToken,
-        expiresIn: 3600,
+        expiresIn: 7200,
         message: getUser,
       });
     })

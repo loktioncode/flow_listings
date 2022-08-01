@@ -29,7 +29,7 @@ const getPublicKey = (req, res) => {
   // console.log("get cached pubkey", c);
 };
 
-const defi_dapp = (req, res) => {
+const createWallet = (req, res) => {
   res.status(200).send({ message: "create wallet" });
 };
 
@@ -57,7 +57,7 @@ const defi_dapp = (req, res) => {
 // };
 
 module.exports = {
-  defi_dapp,
+  createWallet,
   getPublicKey,
   // upload,
   // uploadCSV,

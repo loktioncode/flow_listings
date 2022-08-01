@@ -5,10 +5,7 @@ const cors = require('cors');
 var cookieParser = require('cookie-parser');
 
 require('dotenv').config();
-const initAuthRoutes = require("./src/routes/auth");
-const walletRoutes = require("./src/routes/wallet");
-
-
+const initRoutes = require("./src/routes/");
 
 let port = process.env.PORT || 8090;
 const app = express();
@@ -44,8 +41,7 @@ app.use(cookieParser());
 app.use(cors(corsOptions));
 
 //api routes
-initAuthRoutes(app);
-walletRoutes(app);
+initRoutes(app);
 
 
 app.listen(port, () => {

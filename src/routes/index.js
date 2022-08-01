@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const wallet_controller = require("../controller/wallet.controller");
 const auth_controller = require("../controller/auth.controller");
 const otp_controller = require("../controller/otp.controller");
-const authorize = require("../middleware/auth");
+const authorize = require("../middleware");
 const { check } = require("express-validator");
-
 
 const validateUserInput = [
   check("name")
@@ -23,8 +23,8 @@ let routes = (app) => {
   router.get("/", auth_controller.ping);
 
   // otp
-  router.post("/email-otp",authorize, otp_controller.emailOtp);
-  router.post("/verify-otp",authorize, otp_controller.verifyOtp);
+  router.post("/email-otp",otp_controller.sendOtp);
+  router.post("/verify-otp", otp_controller.verifyOtp);
 
   //auth
   router.post(
@@ -35,9 +35,12 @@ let routes = (app) => {
 
   router.post("/signin", auth_controller.signIn);
   router.get("/getusers", auth_controller.getUsers);
-  router.get("/user/:id",authorize,  auth_controller.getUser);
+  router.get("/user/:id", authorize, auth_controller.getUser);
   router.delete("/delete-user/:id", authorize, auth_controller.deleteUser);
-  
+  //wallets
+  router.get("/add-wallet", authorize, wallet_controller.createWallet);
+  router.get("/get-pubkey", authorize, wallet_controller.getPublicKey);
+
   app.use(router);
 };
 

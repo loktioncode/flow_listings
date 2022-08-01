@@ -56,7 +56,8 @@ var dates = {
 function AddMinutesToDate(date, minutes) {
   return new Date(date.getTime() + minutes * 60000);
 }
-const emailOtp = async (req, res) => {
+
+const sendOtp = async (req, res) => {
   try {
     const { email, type } = req.body;
     let email_subject, email_message;
@@ -85,31 +86,28 @@ const emailOtp = async (req, res) => {
       verified: false,
     });
 
-    // Create details object containing the email and otp id
-    var details = {
-      timestamp: now,
-      check: email,
-      success: true,
-      message: "OTP sent to user",
-      otp_id: otp_instance.email,
-    };
-
-  
-
-    otp_instance
-      .save()
-      .then((response) => {
-        // res.status(201).json({
-        //   message: "User successfully created!",
-        //   result: response,
-        // });
-        console.log("otp added to db");
-      })
-      .catch((error) => {
-        // res.status(500).json({
-        //   error: error,
-        // });
-      });
+    otpSchema.find({ email: email }, (error, data) => {
+      if (error) {
+        res.status(401).json({
+          message: "User not Found",
+        });
+      } else {
+        res.status(200).json(data);
+      }
+      if (!data) {
+        otp_instance.save().then(() => console.log("otp added to db"));
+      } else {
+        let obj = {
+          email: email,
+          otp: otp,
+          expiration_time: expiration_time,
+          verified: false,
+        };
+        otpSchema.findOneAndUpdate({ email: email }, obj, null, function () {
+          console.log("otp updated");
+        });
+      }
+    });
 
     //Choose message template according type requestedconst encoded= await encode(JSON.stringify(details))
     if (type) {
@@ -143,8 +141,6 @@ const emailOtp = async (req, res) => {
       },
     });
 
-    console.log(">>", email, process.env.EMAIL_ADDRESS);
-
     const mailOptions = {
       from: `"P2P DEFI"<${process.env.EMAIL_ADDRESS}>`,
       to: `${email}`,
@@ -155,7 +151,7 @@ const emailOtp = async (req, res) => {
     await transporter.verify();
 
     //Send Email
-    await transporter.sendMail(mailOptions, (err, response) => {
+    transporter.sendMail(mailOptions, (err, response) => {
       if (err) {
         return res.status(400).send({ Status: "Failure", Details: err });
       } else {
@@ -185,7 +181,7 @@ const verifyOtp = async (req, res) => {
     }
 
     let filter = {
-      email: email
+      email: email,
     };
 
     const otp_instance = await otpSchema.findOne(filter);
@@ -202,8 +198,8 @@ const verifyOtp = async (req, res) => {
           if (otp === otp_instance.otp) {
             // Mark OTP as verified or used
             const update = { verified: true };
-            let doc = await otpSchema.findOneAndUpdate(filter, update,{
-              returnOriginal: false
+            let doc = await otpSchema.findOneAndUpdate(filter, update, {
+              returnOriginal: false,
             });
 
             console.log(">updated OTP>", doc);
@@ -211,7 +207,7 @@ const verifyOtp = async (req, res) => {
             const response = {
               Status: "Success",
               Details: "OTP Matched",
-              email: email
+              email: email,
             };
             return res.status(200).send(response);
           } else {
@@ -237,6 +233,6 @@ const verifyOtp = async (req, res) => {
 };
 
 module.exports = {
-  emailOtp,
+  sendOtp,
   verifyOtp,
 };
