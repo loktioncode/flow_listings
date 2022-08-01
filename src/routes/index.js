@@ -38,8 +38,10 @@ let routes = (app) => {
   router.get("/user/:id", authorize, auth_controller.getUser);
   router.delete("/delete-user/:id", authorize, auth_controller.deleteUser);
   //wallets
-  router.get("/add-wallet", authorize, wallet_controller.createWallet);
+  router.post("/add-wallet", authorize, wallet_controller.createWallet);
   router.get("/get-pubkey", authorize, wallet_controller.getPublicKey);
+  router.get("/get-wallet/:id", authorize, wallet_controller.getWallet);
+
 
   app.use(router);
 };
