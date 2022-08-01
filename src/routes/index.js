@@ -23,8 +23,8 @@ let routes = (app) => {
   router.get("/", auth_controller.ping);
 
   // otp
-  router.post("/email-otp",otp_controller.sendOtp);
-  router.post("/verify-otp", otp_controller.verifyOtp);
+  router.post("/email-otp",authorize, otp_controller.sendOtp);
+  router.post("/verify-otp",authorize,  otp_controller.verifyOtp);
 
   //auth
   router.post(
