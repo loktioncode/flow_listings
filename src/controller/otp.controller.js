@@ -87,13 +87,6 @@ const sendOtp = async (req, res) => {
     });
 
     otpSchema.find({ email: email }, (error, data) => {
-      if (error) {
-        res.status(401).json({
-          message: "User not Found",
-        });
-      } else {
-        res.status(200).json(data);
-      }
       if (!data) {
         otp_instance.save().then(() => console.log("otp added to db"));
       } else {
