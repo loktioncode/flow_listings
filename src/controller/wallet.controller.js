@@ -26,6 +26,8 @@ const addWalletToDB = async (walletData, description, walletOwner) => {
     .catch((err) => console.log(err));
 };
 
+
+
 const getPublicKey = (req, res) => {
   //store for 24hrs on FE
   axios
@@ -33,6 +35,7 @@ const getPublicKey = (req, res) => {
     .then(function (response) {
       myCache.set("pubKey", response.data);
       res.status(200).json(response.data);
+      
     })
     .catch(function (error) {
       res.status(401).json({
@@ -90,15 +93,81 @@ const getWallet = (req, res) => {
   axios
     .request(options)
     .then(function (response) {
-      console.log(response.data);
+      res.status(200).send({ walletInfo: response.data.data });
+    })
+    .catch(function (error) {
+      const response = {
+        Status: "Failure",
+        Details: "Failed to Fetch Wallet",
+      };
+      res.status(401).send(response);
+    });
+};
+
+const createUsdcEthBlockchainAddress = async (req, res) => {
+  let walletId = req.params.id;
+  const options = {
+    method: "POST",
+    url: `https://api-sandbox.circle.com/v1/wallets/${walletId}/addresses`,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.CIRCLE_API_KEY}`,
+    },
+    data: {
+      idempotencyKey: crypto.randomUUID(),
+      currency: "USD",
+      chain: "ETH",
+    },
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.status(200).json(response.data.data);
     })
     .catch(function (error) {
       console.error(error);
+      const response = {
+        Status: "Failure",
+        Details: "Failed to create ETH address",
+      };
+      res.status(401).send(response);
+    });
+};
+
+const getUserBlockchainAddresses = async (req, res) => {
+  console.log("get BTCH ADDRESS>>");
+  let walletId = req.params.id;
+  const options = {
+    method: "GET",
+    url: `https://api-sandbox.circle.com/v1/wallets/${walletId}/addresses`,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.CIRCLE_API_KEY}`,
+    }
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      res.status(200).json(response.data.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+      const response = {
+        Status: "Failure",
+        Details: "Failed to create ETH address",
+      };
+      res.status(401).send(response);
     });
 };
 
 module.exports = {
   createWallet,
   getPublicKey,
-  getWallet
+  getWallet,
+  createUsdcEthBlockchainAddress,
+  getUserBlockchainAddresses
 };

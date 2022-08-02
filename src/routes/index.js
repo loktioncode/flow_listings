@@ -41,6 +41,8 @@ let routes = (app) => {
   router.post("/add-wallet", authorize, wallet_controller.createWallet);
   router.get("/get-pubkey", authorize, wallet_controller.getPublicKey);
   router.get("/get-wallet/:id", authorize, wallet_controller.getWallet);
+  router.post("/create-eth-address/:id", authorize, wallet_controller.createUsdcEthBlockchainAddress);
+  router.get("/get-blockchain-address/:id", authorize, wallet_controller.getUserBlockchainAddresses);
 
 
   app.use(router);

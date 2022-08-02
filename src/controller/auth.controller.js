@@ -56,7 +56,7 @@ const registerUser = (req, res, next) => {
 };
 
 const signIn = (req, res) => {
-  console.log("get OTP>>")
+
 
   let getUser;
   userSchema
