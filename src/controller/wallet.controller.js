@@ -137,7 +137,6 @@ const createUsdcEthBlockchainAddress = async (req, res) => {
 };
 
 const getUserBlockchainAddresses = async (req, res) => {
-  console.log("get BTCH ADDRESS>>");
   let walletId = req.params.id;
   const options = {
     method: "GET",
@@ -163,6 +162,57 @@ const getUserBlockchainAddresses = async (req, res) => {
       res.status(401).send(response);
     });
 };
+
+const sendFunds = (destinationWallet) => {
+const options = {
+  method: 'POST',
+  url: 'https://api-sandbox.circle.com/v1/transfers',
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${process.env.CIRCLE_API_KEY}`,
+  },
+  data: {
+    source: {
+      type: 'wallet',
+      identities: [
+        {
+          addresses: [
+            {
+              line1: '100 Money Street',
+              city: 'Boston',
+              district: 'MA',
+              postalCode: '2087',
+              country: 'US'
+            }
+          ],
+          type: 'individual',
+          name: 'Satoshi Nakamoto'
+        }
+      ],
+      id: '12345'
+    },
+    destination: {
+      type: 'blockchain',
+      address: '0x8381470ED67C3802402dbbFa0058E8871F017A6F',
+      addressTag: '123456789',
+      chain: 'ETH'
+    },
+    amount: {amount: '3.14', currency: 'USD'},
+    idempotencyKey: 'ba943ff1-ca16-49b2-ba55-1057e70ca5c7'
+  }
+};
+
+axios
+  .request(options)
+  .then(function (response) {
+    console.log(response.data);
+  })
+  .catch(function (error) {
+    console.error(error);
+  });
+
+}
 
 module.exports = {
   createWallet,
