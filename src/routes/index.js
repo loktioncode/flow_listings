@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const wallet_controller = require("../controller/wallet.controller");
+const listings_controller = require("../controller/listings.controller");
 const auth_controller = require("../controller/auth.controller");
 const otp_controller = require("../controller/otp.controller");
+const data_controller = require("../controller/data.controller");
+
 const authorize = require("../middleware");
 const { check } = require("express-validator");
 
@@ -20,30 +22,22 @@ const validateUserInput = [
 ];
 
 let routes = (app) => {
-  router.get("/", auth_controller.ping);
+  router.get("/", data_controller.populateData);
 
-  // otp
+  // // otp
   router.post("/email-otp",authorize, otp_controller.sendOtp);
   router.post("/verify-otp",authorize,  otp_controller.verifyOtp);
 
-  //auth
-  router.post(
-    "/register-user",
-    validateUserInput,
-    auth_controller.registerUser
-  );
-
+  // //auth
+  router.post("/register", validateUserInput, auth_controller.registerUser);
   router.post("/signin", auth_controller.signIn);
   router.get("/getusers", auth_controller.getUsers);
   router.get("/user/:id", authorize, auth_controller.getUser);
   router.delete("/delete-user/:id", authorize, auth_controller.deleteUser);
-  //wallets
-  router.post("/add-wallet", authorize, wallet_controller.createWallet);
-  router.get("/get-pubkey", authorize, wallet_controller.getPublicKey);
-  router.get("/get-wallet/:id", authorize, wallet_controller.getWallet);
-  router.get("/create-eth-address/:id", authorize, wallet_controller.createUsdcEthBlockchainAddress);
-  router.get("/get-blockchain-address/:id", authorize, wallet_controller.getUserBlockchainAddresses);
-
+  // properties
+  router.get("/agents/:organizationId",authorize, listings_controller.getOrgAgent);
+  router.get("/listings/:agentId",authorize,listings_controller.getAgentListings);
+  router.get("/orglistings/:organizationId",authorize,listings_controller.getOrgListing); 
 
   app.use(router);
 };

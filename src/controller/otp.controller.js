@@ -135,7 +135,7 @@ const sendOtp = async (req, res) => {
     });
 
     const mailOptions = {
-      from: `"P2P DEFI"<${process.env.EMAIL_ADDRESS}>`,
+      from: `"PROPERTY APP"<${process.env.EMAIL_ADDRESS}>`,
       to: `${email}`,
       subject: email_subject,
       text: email_message,

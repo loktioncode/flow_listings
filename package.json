@@ -1,25 +1,23 @@
 {
-  "name": "p2p-dapp-api",
+  "name": "listings-api",
   "version": "1.0.0",
-  "description": "Node.js Express Rest APIs to Create blockchain wallets",
+  "description": "Node.js Express Rest APIs ",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js"
   },
   "keywords": [
-    "peer to peer dapp"
+    "listings api"
   ],
   "author": "elisha",
   "license": "ISC",
   "dependencies": {
-    "arweave": "^1.10.16",
     "axios": "^0.27.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
     "buffer-image": "^1.0.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "crypto": "^1.0.1",
     "csv-parser": "^3.0.0",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",

@@ -7,7 +7,7 @@ const salt = 10;
 
 const ping = (req, res) => {
   res.set("Content-Type", "text/html");
-  res.status(200).send(Buffer.from("<p>P2P api running ...!</p>"));
+  res.status(200).send(Buffer.from("<p> api running ...!</p>"));
 };
 
 const getUser = (req, res) => {
