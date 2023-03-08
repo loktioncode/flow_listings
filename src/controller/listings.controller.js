@@ -1,4 +1,4 @@
-const axios = require("axios").default;
+
 const Listing = require("../models/listing");
 const Agent = require("../models/agent");
 // const Organisation = require("../models/organisation");

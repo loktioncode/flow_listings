@@ -61,7 +61,7 @@ listingSchema.statics.findByOrganization = async function(organizationId) {
   return listings;
 };
 
-const Listing = mongoose.model('listing', listingSchema);
+const Listing = mongoose.model('Listing', listingSchema);
 
 module.exports = Listing;
 
