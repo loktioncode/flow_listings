@@ -1,6 +1,6 @@
 
-const Listing = require("../models/listing");
-const Agent = require("../models/agent");
+const Listing = require("../models/Listing");
+const Agent = require("../models/Agent");
 // const Organisation = require("../models/organisation");
 
 const getAgentListings = async (req, res) => {
