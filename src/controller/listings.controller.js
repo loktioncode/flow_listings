@@ -1,7 +1,7 @@
 const axios = require("axios").default;
 const Listing = require("../models/listing");
 const Agent = require("../models/agent");
-// const Organisation = require("../models/Organisation");
+// const Organisation = require("../models/organisation");
 
 const getAgentListings = async (req, res) => {
   const agentId = req.params.agentId;
