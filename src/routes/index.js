@@ -25,8 +25,8 @@ let routes = (app) => {
   router.get("/", data_controller.populateData);
 
   // // otp
-  router.post("/email-otp",authorize, otp_controller.sendOtp);
-  router.post("/verify-otp",authorize,  otp_controller.verifyOtp);
+  router.post("/email-otp", otp_controller.sendOtp);
+  router.post("/verify-otp", otp_controller.verifyOtp);
 
   // //auth
   router.post("/register", validateUserInput, auth_controller.registerUser);
@@ -36,8 +36,8 @@ let routes = (app) => {
   router.delete("/delete-user/:id", authorize, auth_controller.deleteUser);
   // properties
   router.get("/agents/:organizationId", listings_controller.getOrgAgent);
-  router.get("/listings/:agentId",listings_controller.getAgentListings);
-  router.get("/orglistings/:organizationId",listings_controller.getOrgListing); 
+  router.get("/listings/:agentId", listings_controller.getAgentListings);
+  router.get("/orglistings/:organizationId", listings_controller.getOrgListing);
 
   app.use(router);
 };
