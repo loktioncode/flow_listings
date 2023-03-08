@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const userSchema = require("../models/User");
+const User = require("../models/User");
 const { validationResult } = require("express-validator");
 
 const salt = 10;
@@ -11,7 +11,7 @@ const ping = (req, res) => {
 };
 
 const getUser = (req, res) => {
-  userSchema.findById(req.params.id, (error, data) => {
+  User.findById(req.params.id, (error, data) => {
     if (error) {
       res.status(401).json({
         message: "User not found!",
@@ -33,7 +33,7 @@ const registerUser = (req, res, next) => {
     return res.status(422).jsonp(errors.array());
   } else {
     bcrypt.hash(req.body.password, salt).then((hash) => {
-      const user = new userSchema({
+      const user = new User({
         name: req.body.name,
         email: req.body.email,
         password: hash,
@@ -59,7 +59,7 @@ const signIn = (req, res) => {
 
 
   let getUser;
-  userSchema
+  User
     .findOne({
       email: req.body.email,
     })
@@ -101,7 +101,7 @@ const signIn = (req, res) => {
     });
 };
 const getUsers = (req, res) => {
-  userSchema.find((error, response) => {
+  User.find((error, response) => {
     if (error) {
       res.status(401).json({
         message: "User not Found",
@@ -113,7 +113,7 @@ const getUsers = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  userSchema.findByIdAndUpdate(
+  User.findByIdAndUpdate(
     req.params.id,
     {
       $set: req.body,
@@ -132,7 +132,7 @@ const updateUser = (req, res) => {
 };
 
 const deleteUser = (req, res) => {
-  userSchema.findByIdAndRemove(req.params.id, (error, data) => {
+  User.findByIdAndRemove(req.params.id, (error, data) => {
     if (error) {
       res.status(401).json({
         message: "User deletion failed!",
