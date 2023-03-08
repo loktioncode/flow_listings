@@ -1,6 +1,6 @@
 const axios = require("axios").default;
-const Listing = require("../models/Listing");
-const Agent = require("../models/Agent");
+const Listing = require("../models/listing");
+const Agent = require("../models/agent");
 // const Organisation = require("../models/Organisation");
 
 const getAgentListings = async (req, res) => {
@@ -29,7 +29,8 @@ const getOrgAgent = async (req, res) => {
     const listings = await Listing.find({ organisation: organizationId });
     const agentIds = listings.map((listing) => listing.agent);
     const agents = await Agent.find({ _id: { $in: agentIds } });
-    res.json(agents);
+    //to be updated to agents
+    res.json(agentIds);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
