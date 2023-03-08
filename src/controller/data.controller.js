@@ -1,7 +1,7 @@
 const axios = require("axios");
-const Listing = require("../models/listing");
-const Agent = require("../models/agent");
-const Organisation = require("../models/organisation");
+const Listing = require("../models/Listing");
+const Agent = require("../models/Agent");
+const Organisation = require("../models/Organisation");
 
 // Controller function to populate data
 const populateData = async (req, res) => {
