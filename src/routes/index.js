@@ -35,9 +35,9 @@ let routes = (app) => {
   router.get("/user/:id", authorize, auth_controller.getUser);
   router.delete("/delete-user/:id", authorize, auth_controller.deleteUser);
   // properties
-  router.get("/agents/:organizationId",authorize, listings_controller.getOrgAgent);
-  router.get("/listings/:agentId",authorize,listings_controller.getAgentListings);
-  router.get("/orglistings/:organizationId",authorize,listings_controller.getOrgListing); 
+  router.get("/agents/:organizationId", listings_controller.getOrgAgent);
+  router.get("/listings/:agentId",listings_controller.getAgentListings);
+  router.get("/orglistings/:organizationId",listings_controller.getOrgListing); 
 
   app.use(router);
 };
